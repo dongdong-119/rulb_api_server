@@ -1,0 +1,4 @@
+
+# DB 설정 관련
+SQLALCHEMY_DATABASE_URI = 'postgresql://root:1234@3.36.154.16:5432/rulb'
+SQLALCHEMY_TRACK_MODIFICATIONS = False
