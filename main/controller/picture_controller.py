@@ -2,36 +2,35 @@ from flask import request, jsonify
 from flask_restx import Resource, Namespace
 from werkzeug.utils import secure_filename
 
-from main import db
-from main.utils import validation
+from main.service import picture_service
 
 
 """
     [사진 관련 API] : /picture
     
-    1. /upload (post)
+    1. /upload 사진 업로드
     : 업로드된 사진 -> ai 모델 -> 결과 반환
-    
     2. 
     
     
 """
 
-
-Picture = Namespace(
+api = Namespace(
     name='picture',
     description='사진 관련 API'
 )
 
 
 # 사진 업로드 api
-@Picture.route('/upload')
+@api.route('/upload')
 class PicturePost(Resource):
 
+    @api.response(200, '얼굴인식이 성공적으로 완료되었습니다.')
+    @api.response(400, '파일이 없거나, 지원하지 않는 파일 형식입니다.')
     def get(self):
 
         # 1. 데이터 검증
-        image = validation.validate_input_image(request)
+        image = picture_service.get_image(request)
 
         image_name = secure_filename(str(image.filename))
 
@@ -53,8 +52,5 @@ class PicturePost(Resource):
         else:
             return 0
 
-
-# 사진 올려서 -> 결과 값 받는데 post? get?
-#
 
 # @Picture.route('/')

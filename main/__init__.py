@@ -17,18 +17,17 @@ api = Api(
 # config
 app.config.from_object(config)
 
-
 # db/orm
 db = SQLAlchemy(app)
 
-
 import main.models
+
 with app.app_context():
     db.create_all()
 
 # namespace
-from main.controller.picture_controller import Picture
-from main.controller.contact_controller import Contact
+from main.controller.picture_controller import api as picture_ns
+from main.controller.inquiry_controller import api as inquiry_ns
 
-api.add_namespace(Picture, '/picture')
-api.add_namespace(Contact, '/contact')
+api.add_namespace(picture_ns, '/picture')
+api.add_namespace(inquiry_ns, '/inquiry')
