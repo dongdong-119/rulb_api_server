@@ -1,13 +1,19 @@
+import json
+
 from main import db
 from main.models import Inquiry
-from main.utils import validation, errors
+from main.utils import errors, mail
 
 
 # 문의 저장
-def save_new_inquiry(data):
+def save_new_inquiry(data, image):
 
-    title = data['title'] if data['title'] else '무제'
-    content = data['content'] if data['content'] else '내용 없음'
+    # data(str) -> dict
+    data = json.loads(data)
+
+    title = data['title'] if data['title'] else '업로드하신 사진에 대한 교체 요청입니다.'
+
+    content = data['content'] if data['content'] else '업로드하신 사진에 대한 교체를 요청합니다.'
 
     new_inquiry = Inquiry(
         email_to=data['email_to'],
@@ -17,13 +23,19 @@ def save_new_inquiry(data):
         content=content
     )
 
+    # 문의 발송
+    converted_image = image.stream.read()
+
+    mail.send_mail(title, content, data['email_to'], converted_image)
+
+    # 문의 저장
     save_change(new_inquiry)
 
-    success_msg = {
-        'message': '문의가 성공적으로 등록되었습니다.'
+    success_response = {
+        'message': '문의가 성공적으로 전송 및 등록되었습니다.'
     }
 
-    return success_msg, 201
+    return success_response, 201
 
 
 # 문의 삭제
@@ -37,11 +49,11 @@ def delete_inquiry(data):
         db.session.delete(find_inquiry)
         db.session.commit()
 
-        success_msg = {
+        success_response = {
             'message': '문의가 성공적으로 삭제되었습니다.'
         }
 
-        return success_msg, 200
+        return success_response, 200
 
     else:
         return errors.sendInquiryNotFoundError()

@@ -21,7 +21,6 @@ app.config.from_object(config)
 db = SQLAlchemy(app)
 
 import main.models
-
 with app.app_context():
     db.create_all()
 

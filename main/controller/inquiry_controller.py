@@ -21,15 +21,23 @@ _inquiry_id = InquiryDto.inquiry_id
 @api.route('/')
 class InquiryManager(Resource):
 
-    @api.response(201, '문의가 성공적으로 등록되었습니다.')
-    @api.expect(_inquiry, validate=False)
+    @api.response(201, '문의가 성공적으로 전송 및 등록되었습니다.')
+    # @api.expect(_inquiry, validate=False)
     def post(self):
 
-        """Create new Inquiry"""
+        """
+        Create new Inquiry
 
-        data = request.json
+            1. 기관/단체에 문의 메일 발송
+            2. DB에 문의내용 저장
 
-        return inquiry_service.save_new_inquiry(data)
+        """
+
+
+        data = request.form['data']
+        image = request.files['image']
+
+        return inquiry_service.save_new_inquiry(data, image)
 
 
     @api.expect(_inquiry_id, validate=False)

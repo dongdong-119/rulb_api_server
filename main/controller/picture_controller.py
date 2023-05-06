@@ -50,7 +50,10 @@ class PicturePost(Resource):
             return jsonify(result)
         # 얼굴 인식 불가능
         else:
-            return 0
+            return {
+                'result': '결과',
+                'status': '성공'
+            }
 
 
 # @Picture.route('/')
