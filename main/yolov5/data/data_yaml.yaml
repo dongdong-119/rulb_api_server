@@ -1,0 +1,5 @@
+names:
+  0: face
+nc: 1
+train: /content/drive/MyDrive/yolov5/data/train/images
+val: /content/drive/MyDrive/yolov5/data/val/images
